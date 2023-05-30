@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Αρχική Σελίδα</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+    	padding: 0;
+    }
+    
+    header {
+    	background-color: #333;
+    	color: #fff;
+    	padding: 10px 0px 10px 50px;
+    	text-align: left;
+    }
+    
+    nav {
+    	background-color: #f4f4f4;
+    	padding: 10px 0px 10px 50px;
+    }
+    
+    nav ul {
+    	list-style-type: none;
+    	margin: 0;
+    	padding: 0;
+    }
+    
+    nav ul li {
+    	display: inline-block;
+    	margin-right: 10px;
+    }
+    
+    nav ul li a {
+	    color: #333;
+	    text-decoration: none;
+	    padding: 5px;
+	}
+    
+    section {
+    	height:100%;
+    	background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("images/wp10615910.jpg");
+    	background-size:cover;
+    	height:84vh;
+    }
+    section h1{
+    	color: #fff;
+    	padding-top:80px;
+    	margin: 0px;
+    	text-align: center;
+    	font-size: 50px;
+    	
+    }
+    section p{
+    	color: #fff;
+    	padding-top:20px;
+    	text-align: center;
+    	font-size: 20px;
+    	width: 460px;
+    	margin: 0 auto;
+    	line-height: 28px;
+    	
+    }
+
+	.flexbox{
+		display: flex;
+		flex-direction:row;
+		align-items: center;
+	}
+    .container {
+      width: 300px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	  margin-top:30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 280px;
+      padding: 10px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+	  
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #e50914;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #b2070e;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Κεντρικό Μενού</h1>
+  </header>
+  
+  <nav>
+    <ul>
+      <li><a href="/Tickets-Java-Web-Project/">Αρχική</a></li>
+    </ul>
+  </nav>
+  
+  <section>
+  <h1>Καλώς ήρθατε</h1>
+  <p>Παρακαλώ συνδεθείτε για να συνεχίσετε.</p>
+   <div class="container">
+    <h2>Σύνδεση</h2>
+    <form action="login" method="post">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" placeholder="Εισάγετε το email σας">
+      </div>
+      <div class="form-group">
+        <label for="password">Κωδικός</label>
+        <input type="password" id="password" name="password" placeholder="Εισάγετε τον κωδικό σας">
+      </div>
+      <input type="submit" value="Σύνδεση">
+    </form>
+  </div>
+  </section>
+</body>
+</html>
