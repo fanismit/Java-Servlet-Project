@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="java.util.ArrayList" %>
+    <%@page import="java.util.List" %>   
+    <%@page import="Classes.Movies" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,13 +117,18 @@
     <div class="container">
         <h1>List of Movies</h1>
         <div class="movie-list">
+        	<%
+        	List<Classes.Movies> movies = (List<Classes.Movies>) request.getAttribute("movies");
+        	if(movies != null){
+        		for(Classes.Movies movie: movies){
+        	%>
             <div class="movie">
                 <div class="movie-image">
                     <img src="movie1.jpg" alt="Movie 1">
                 </div>
                 <div class="movie-details">
-                    <div class="movie-title">Movie 1</div>
-                    <div class="movie-category">Category: Action</div>
+                    <div class="movie-title"><%= movie.getMovieTitle() %></div>
+                    <div class="movie-category"><%= movie.getMovieCategory() %></div>
                     <div class="form-group">
                         <div class="form-label">Cinema:</div>
                         <input type="text" class="form-input-small" name="box1" value="">
@@ -134,26 +142,14 @@
                     </div>
                 </div>
             </div>
-            <div class="movie">
-                <div class="movie-image">
-                    <img src="movie2.jpg" alt="Movie 2">
-                </div>
-                <div class="movie-details">
-                    <div class="movie-title">Movie 2</div>
-                    <div class="movie-category">Category: Drama</div>
-                    <div class="form-group">
-                        <div class="form-label">Cinema:</div>
-                        <input type="text" class="form-input-small" name="box1" value="">
-                        <div class="form-label">Date:</div>
-                        <input type="text" class="form-input-small" name="box2" value="">
-                        <div class="form-label">Time:</div>
-                        <input type="text" class="form-input-small" name="box3" value="">
-                        <div class="form-label">Room:</div>
-                        <input type="text" class="form-input-small" name="box4" value="">
-                        <input type="submit" class="btn-submit" value="Assign">
-                    </div>
-                </div>
-            </div>
+            <% 
+                }
+            } else {
+            %>
+            <p>No movies found.</p>
+            <% 
+            }
+            %>
             <!-- Add more here-->
         </div>
     </div>
