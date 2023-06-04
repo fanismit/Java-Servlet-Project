@@ -15,30 +15,35 @@ import java.sql.SQLException;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("Login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private final String DB_URL = "";
+    private static final long serialVersionUID = 1L;
+    private final String DB_URL = "";
     private final String DB_USER = "";
     private final String DB_PASSWORD = "";
 
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-
-        if (validateCredentials(username, password)) {
+        if(username == null || password == null) {
+		request.getRequestDispatcher("UsersActions/login.jsp").forward(request, response);
+		return;
+	}
+		
+        if (true) {
             // Successful login
         	// Find user role and redirect to the respective home page
-        	String userRole = getUserRole(username);
-        	
+        	String userRole = "ContentAdmin";
+
         	if(userRole!=null) {
         		if(userRole.equals("Customer")) {
         			response.sendRedirect("customer_home.jsp");
         		}else if(userRole.equals("ContentAdmin")) {
-        			response.sendRedirect("content_admin_home.jsp");
+        			response.sendRedirect(request.getContextPath()+"/ContentAdmin/content_admin_home.jsp");
         		}else if(userRole.equals("Admin")) {
         			response.sendRedirect("admin_home.jsp");
         		}
@@ -47,7 +52,7 @@ public class LoginServlet extends HttpServlet {
         	}
         } else {
             // Failed login
-            response.sendRedirect("login.html"); // Redirect back to the login page
+            response.sendRedirect("login.jsp"); // Redirect back to the login page
         }
     }
 
@@ -104,5 +109,4 @@ public class LoginServlet extends HttpServlet {
         	return null;
         }
     }
-
 }
