@@ -44,12 +44,23 @@ public class LoginServlet extends HttpServlet {
             // Successful login
             // Find user role and redirect to the respective home page
             String userRole = getUserRole(username);
-
+            String userEmail = getUserEmail(username);
+    	    String userPassword = getUserPassword(username);
+    	    
+    	    
             if (userRole != null) {
                 if (userRole.equals("Customer")) {
                     response.sendRedirect("customer_home.jsp");
                 } else if (userRole.equals("ContentAdmin")) {
-                    response.sendRedirect(request.getContextPath() + "/ContentAdmin/content_admin_home.jsp");
+                	
+            	    request.setAttribute("username", username);
+            	    request.setAttribute("password", password);
+            	    request.setAttribute("role", userRole);
+            	    request.setAttribute("email", userEmail);
+
+                    
+                    request.getRequestDispatcher("/ContentAdmin/content_admin_home.jsp").forward(request, response);
+
                 } else if (userRole.equals("Admin")) {
                     response.sendRedirect("admin_home.jsp");
                 }
@@ -97,6 +108,58 @@ public class LoginServlet extends HttpServlet {
                 statement.close();
 
                 return userRole;
+            } else {
+                resultSet.close();
+                statement.close();
+
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private String getUserEmail(String username) {
+        try (Connection connection = dataSource.getConnection()) {
+            String query = "SELECT email FROM user WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String userEmail = resultSet.getString("email");
+
+                resultSet.close();
+                statement.close();
+
+                return userEmail;
+            } else {
+                resultSet.close();
+                statement.close();
+
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private String getUserPassword(String username) {
+        try (Connection connection = dataSource.getConnection()) {
+            String query = "SELECT password FROM user WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String userPassword = resultSet.getString("password");
+
+                resultSet.close();
+                statement.close();
+
+                return userPassword;
             } else {
                 resultSet.close();
                 statement.close();

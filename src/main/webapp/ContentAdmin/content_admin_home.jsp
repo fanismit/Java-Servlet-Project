@@ -86,7 +86,7 @@
 </head>
 <body>
     <div class="navbar">
-        <a class="active" href="content_admin_home.jsp">Profile</a>
+        <a class="active" href="#">Profile</a>
         <a href="#">View Movies</a>
         <a href="Actions/AddMovie.jsp">Add Movie</a>
         <a href="#">Assign Room & Time</a>
@@ -100,21 +100,21 @@
         		<div class="column">
         			<div class="user-info">
 	        			<label for="username">Username:</label>
-	        			<input type="text" id="username" value="Johnsmith" readonly>
+	        			<input type="text" id="username" value="${username}" readonly>
 	        		</div>
 	        		<div class="user-info">
 	        			<label for="email">Email:</label>
-	        			<input type="email" id="email" value="johnsmith@example.com" readonly>
+	        			<input type="email" id="email" value="${email}" readonly>
 	        		</div>
 				</div>
         		<div class="column">
         			<div class="user-info">
 		        		<label for="password">Password:</label>
-		        		<input type="password" id="password" value="12345" readonly>
+		        		<input type="password" id="password" value="${password}" readonly>
 	        		</div>
 	        		<div class="user-info">
 	        			<label for="role">Role:</label>
-	        			<input type="text" id="role" value="Admin" readonly>
+	        			<input type="text" id="role" value="${role}" readonly>
         			</div>
         		</div>
    			 </form>
