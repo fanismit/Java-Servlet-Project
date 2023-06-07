@@ -1,5 +1,3 @@
-
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -41,24 +42,17 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (validateCredentials(username, password)) {
+        	 HttpSession session = request.getSession();
             // Successful login
             // Find user role and redirect to the respective home page
             String userRole = getUserRole(username);
-            String userEmail = getUserEmail(username);
-    	    String userPassword = getUserPassword(username);
-    	    
-    	    
+
             if (userRole != null) {
                 if (userRole.equals("Customer")) {
                     response.sendRedirect("customer_home.jsp");
                 } else if (userRole.equals("ContentAdmin")) {
-                	
-            	    request.setAttribute("username", username);
-            	    request.setAttribute("password", password);
-            	    request.setAttribute("role", userRole);
-            	    request.setAttribute("email", userEmail);
-
-                    
+                    List<String> userDetails = getUserDetails(username);
+                    session.setAttribute("userDetails", userDetails);
                     request.getRequestDispatcher("/ContentAdmin/content_admin_home.jsp").forward(request, response);
 
                 } else if (userRole.equals("Admin")) {
@@ -119,9 +113,13 @@ public class LoginServlet extends HttpServlet {
             return null;
         }
     }
-    private String getUserEmail(String username) {
+
+
+    private List<String> getUserDetails(String username) {
+        List<String> userDetails = new ArrayList<>();
+
         try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT email FROM user WHERE username = ?";
+            String query = "SELECT email, role, password FROM user WHERE username = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
 
@@ -129,46 +127,21 @@ public class LoginServlet extends HttpServlet {
 
             if (resultSet.next()) {
                 String userEmail = resultSet.getString("email");
-
-                resultSet.close();
-                statement.close();
-
-                return userEmail;
-            } else {
-                resultSet.close();
-                statement.close();
-
-                return null;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    private String getUserPassword(String username) {
-        try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT password FROM user WHERE username = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
+                String userRole = resultSet.getString("role");
                 String userPassword = resultSet.getString("password");
-
-                resultSet.close();
-                statement.close();
-
-                return userPassword;
-            } else {
-                resultSet.close();
-                statement.close();
-
-                return null;
+                
+                userDetails.add(username);
+                userDetails.add(userEmail);
+                userDetails.add(userRole);
+                userDetails.add(userPassword);
             }
+
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+
+        return userDetails;
     }
 }

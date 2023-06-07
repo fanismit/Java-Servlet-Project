@@ -86,7 +86,7 @@
 </head>
 <body>
     <div class="navbar">
-        <a class="active" href="#">Profile</a>
+        <a class="active" href="/CinemaUnipi/ContentAdmin/content_admin_home.jsp">Profile</a>
         <a href="#">View Movies</a>
         <a href="Actions/AddMovie.jsp">Add Movie</a>
         <a href="#">Assign Room & Time</a>
@@ -100,21 +100,21 @@
         		<div class="column">
         			<div class="user-info">
 	        			<label for="username">Username:</label>
-	        			<input type="text" id="username" value="${username}" readonly>
+	        			<input type="text" id="username" value="${sessionScope.userDetails.get(0)}" readonly>
 	        		</div>
 	        		<div class="user-info">
 	        			<label for="email">Email:</label>
-	        			<input type="email" id="email" value="${email}" readonly>
+	        			<input type="email" id="email" value="${sessionScope.userDetails.get(1)}" readonly>
 	        		</div>
 				</div>
         		<div class="column">
         			<div class="user-info">
 		        		<label for="password">Password:</label>
-		        		<input type="password" id="password" value="${password}" readonly>
+		        		<input type="password" id="password" value="${sessionScope.userDetails.get(3)}" readonly>
 	        		</div>
 	        		<div class="user-info">
 	        			<label for="role">Role:</label>
-	        			<input type="text" id="role" value="${role}" readonly>
+	        			<input type="text" id="role" value="${sessionScope.userDetails.get(2)}" readonly>
         			</div>
         		</div>
    			 </form>
