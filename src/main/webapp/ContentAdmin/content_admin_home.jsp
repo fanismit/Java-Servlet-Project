@@ -87,9 +87,9 @@
 <body>
     <div class="navbar">
         <a class="active" href="/CinemaUnipi/ContentAdmin/content_admin_home.jsp">Profile</a>
-        <a href="#">View Movies</a>
-        <a href="Actions/AddMovie.jsp">Add Movie</a>
-        <a href="#">Assign Room & Time</a>
+        <a href="ContentAdmin/Actions/ViewMovies.jsp">View Movies</a>
+        <a href="ContentAdmin/Actions/CreateMovie.jsp">Create Movie</a>
+        <a href="ContentAdmin/Actions/CreateProvoli.jsp">Create Provoli</a>
         <a class="logout-btn" href="#">Logout</a>
     </div>
 
