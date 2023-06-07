@@ -42,17 +42,15 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (validateCredentials(username, password)) {
-        	 HttpSession session = request.getSession();
-            // Successful login
-            // Find user role and redirect to the respective home page
-            String userRole = getUserRole(username);
+        	HttpSession session = request.getSession();
+            List<String> userDetails = getUserDetails(username);
+            session.setAttribute("userDetails", userDetails);
+            String userRole = userDetails.get(2);
 
             if (userRole != null) {
                 if (userRole.equals("Customer")) {
                     response.sendRedirect("customer_home.jsp");
                 } else if (userRole.equals("ContentAdmin")) {
-                    List<String> userDetails = getUserDetails(username);
-                    session.setAttribute("userDetails", userDetails);
                     request.getRequestDispatcher("/ContentAdmin/content_admin_home.jsp").forward(request, response);
 
                 } else if (userRole.equals("Admin")) {
@@ -86,34 +84,6 @@ public class LoginServlet extends HttpServlet {
             return false;
         }
     }
-
-    private String getUserRole(String username) {
-        try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT role FROM user WHERE username = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                String userRole = resultSet.getString("role");
-
-                resultSet.close();
-                statement.close();
-
-                return userRole;
-            } else {
-                resultSet.close();
-                statement.close();
-
-                return null;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 
     private List<String> getUserDetails(String username) {
         List<String> userDetails = new ArrayList<>();
