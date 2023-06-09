@@ -1,23 +1,21 @@
 
 
-
-
 import jakarta.servlet.ServletException;
+import java.util.List;
+import jakarta.servlet.http.HttpSession;
+import mainpackage.ContentAdmins;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import javax.swing.JOptionPane;
+import mainpackage.Films;
 
 /**
  * Servlet implementation class CreateMovieServlet
@@ -26,6 +24,9 @@ import javax.swing.JOptionPane;
 public class CreateMovieServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DataSource dataSource = null;
+	private ContentAdmins contentAdmins;
+	private final String SUCCESS_MSG_TITLE = "Saved Successfully!";
+	private final String SUCCESS_MSG_BODY = "A new Movie was added to the database!";
 	
 	 public void init() throws ServletException {
 	        try {
@@ -41,12 +42,8 @@ public class CreateMovieServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("YES-1!");
+		// Retrieve form inputs
 		String movieTitle = request.getParameter("movieTitle");
 		String movieCategory = request.getParameter("movieCategory");
 		String movieDirector = request.getParameter("movieDirector"); 
@@ -55,43 +52,27 @@ public class CreateMovieServlet extends HttpServlet {
 		String movieImageURL = request.getParameter("imageUrl");
 		String movieId = request.getParameter("movieId");
 		int movieIdNumber = Integer.parseInt(movieId);
-		int admin= 1;
+		
+		Films film = new Films(movieIdNumber);
+		
+		if(!film.isFilmIdUnique(movieId)) {
 
-		if(!isMovieIdUnique(movieId)) {
-            JOptionPane.showMessageDialog(null, "ID is not unique. Please enter a different ID.", "Duplicate ID", JOptionPane.ERROR_MESSAGE);
 		}else {
-			saveMovie(movieTitle, movieCategory, movieImageURL , movieDirector, movieDescription, movieIdNumber, movieLenght, admin );
-			response.sendRedirect("../error.jsp");
+			HttpSession session = request.getSession();
+			List<String> userDetails = (List<String>) session.getAttribute("userDetails");
+			contentAdmins = new ContentAdmins();
+			int adminId = contentAdmins.retrieveAdminIdFromDatabase(userDetails.get(0));
+			saveMovie(movieTitle, movieCategory, movieImageURL , movieDirector, movieDescription, movieIdNumber, movieLenght, adminId );
+			
+			// Show success message
+			request.setAttribute("message_title", SUCCESS_MSG_TITLE);
+			request.setAttribute("message_body", SUCCESS_MSG_BODY);
+			request.getRequestDispatcher("../success.jsp").forward(request, response);
 		}
 	}
 	
-	private boolean isMovieIdUnique(String movieId) {
-		boolean flag = false;
-		 try (Connection connection = dataSource.getConnection()) {
-			String query = "SELECT COUNT(*) FROM movies WHERE ID = ?";
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setString(1, movieId);
-			
-			ResultSet resultSet = statement.executeQuery();
-			
-			if(resultSet.next()) {
-				int count = resultSet.getInt(1);
-				if (count == 0) {
-					flag = true;
-				}
-			}
-			System.out.println("YES-3!");
-			resultSet.close();
-            statement.close();
-            connection.close();
-            
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return flag;
-	}
-	
-	private void saveMovie(String movieTitle, String movieCategory, String movieImageURL, String movieDirector, String movieDescription, int movieId, String movieLenght, int admin) {
+	// Save movies details to database
+	private void saveMovie(String movieTitle, String movieCategory, String movieImageURL, String movieDirector, String movieDescription, int movieId, String movieLenght, int adminId) {
 		 try (Connection connection = dataSource.getConnection()) {
 			String query = "INSERT INTO movies (ID, NAME, CONTENT, LENGTH, TYPE, IMAGEURL , DIRECTOR, CONTENT_ADMIN_ID ) VALUES (?, ?, ? , ?, ? , ? , ? , ?)";
 			PreparedStatement statement = connection.prepareStatement(query);
@@ -102,8 +83,7 @@ public class CreateMovieServlet extends HttpServlet {
 			statement.setString(5, movieCategory);
 			statement.setString(6, movieImageURL);
 			statement.setString(7, movieDirector);
-			statement.setInt(8, admin);
-			System.out.println("YES-2!");
+			statement.setInt(8, adminId);
 			statement.executeUpdate();
 			
             statement.close();
